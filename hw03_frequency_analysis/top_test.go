@@ -80,3 +80,56 @@ func TestTop10(t *testing.T) {
 		}
 	})
 }
+
+func TestTop10_TiesAndSymbolWord(t *testing.T) {
+	// Разделение только по пробелам/переносам:
+	// дефис "-" между пробелами — отдельное «слово».
+	// Тест проверяет:
+	// 1) что "-" попадает в топ как слово
+	// 2) что при равной частоте вторичный ключ — лексикографический порядок
+	input := "- - - a a b b c"
+
+	// Частоты: "-"=3, "a"=2, "b"=2, "c"=1
+	// Сортировка: 3 → "-", потом 2 → "a","b" (лексикографически), потом 1 → "c"
+	expected := []string{"-", "a", "b", "c"}
+	require.Equal(t, expected, Top10(input))
+}
+
+func TestTop10_TruncateTo10_KeepPunctuationAndCase(t *testing.T) {
+	// Проверяем:
+	// 1) берём ровно 10 элементов в ответ,
+	// 2) пунктуация и регистр не нормализуются ("," остаётся при слове, "X" ≠ "x").
+	input := `
+alpha alpha alpha
+beta beta
+gamma
+delta, delta,
+Epsilon Epsilon
+zeta
+eta
+theta
+iota
+kappa
+lambda
+`
+
+	// Частоты (ровно как токены с Fields, без чистки пунктуации):
+	// "alpha"=3
+	// "beta"=2
+	// "delta,"=2
+	// "Epsilon"=2   (заглавная буква — отдельное слово)
+	// остальные по 1: "gamma","zeta","eta","theta","iota","kappa","lambda"
+	//
+	// Отсортируем:
+	// 3 → "alpha"
+	// 2 → "Epsilon","beta","delta,"  (лексикографически: "Epsilon" < "beta" < "delta,")
+	// 1 → "eta","gamma","iota","kappa","lambda","theta","zeta" (лексикографически)
+	//
+	// Берём первые 10.
+	expected := []string{
+		"alpha",
+		"Epsilon", "beta", "delta,",
+		"eta", "gamma", "iota", "kappa", "lambda", "theta",
+	}
+	require.Equal(t, expected, Top10(input))
+}

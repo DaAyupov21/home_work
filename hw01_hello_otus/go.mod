@@ -1,4 +1,4 @@
-module github.com/DaAyupov21/hw01_hello_otus
+module github.com/DaAyupov21/home_work/hw01_hello_otus
 
 go 1.23
 

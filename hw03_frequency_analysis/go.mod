@@ -1,4 +1,4 @@
-module github.com/DaAyupov21/hw03_frequency_analysis
+module github.com/DaAyupov21/home_work/hw03_frequency_analysis
 
 go 1.23
 

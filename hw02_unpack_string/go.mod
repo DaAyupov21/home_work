@@ -1,4 +1,4 @@
-module github.com/DaAypov21/hw02_unpack_string
+module github.com/DaAypov21/home_work/hw02_unpack_string
 
 go 1.23
 
